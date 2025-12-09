@@ -18,44 +18,42 @@ const Header = () => {
             <a href="/input" className="hover:underline">我慢入力</a>
             <a href="/result" className="hover:underline">先週の結果</a>
             <a href="/calendar" className="hover:underline">カレンダー</a>
-            <a href="/goal" className="hover:underline">目標設定変更</a>
+            <a href="/goalSettings" className="hover:underline">目標設定変更</a>
           </nav>
         </div>
 
         {/* 右：シャボン玉（同じ画像をサイズ違いで使用） */}
         <div className="relative w-[340px] h-[200px] overflow-visible">
 
-          {/* 大バブル：ヘッダーが薄くなったので上に寄せる */}
-          <div className="absolute right-[-90px] top-[0px]">
+          <div className="absolute right-[-60px] top-[15px]">
             <div className="relative inline-block">
               <Image
                 src="/bubble2.png"
                 alt="目標金額バブル"
                 width={240}
                 height={240}
-                className="opacity-80"
+                className="opacity-90"
                 priority
               />
               <div className="pointer-events-none absolute inset-0 flex items-center justify-center
-                              text-xl md:text-2xl font-bold text-[#003344]">
+                              text-2xl font-bold text-[#003344]">
                 目標金額:5,000円
               </div>
             </div>
           </div>
 
-          {/* 小バブル：これも少し上に補正 */}
-          <div className="absolute left-[-30px] top-[100px]">
+          <div className="absolute left-[-70px] top-[100px]">
             <div className="relative inline-block">
               <Image
                 src="/bubble2.png"
                 alt="目標回数バブル"
                 width={200}
                 height={200}
-                className="opacity-85"
+                className="opacity-90"
                 priority
               />
               <div className="pointer-events-none absolute inset-0 flex items-center justify-center
-                              text-lg md:text-xl font-bold text-[#004455]">
+                              text-2xl font-bold text-[#004455]">
                 目標回数:3回
               </div>
             </div>

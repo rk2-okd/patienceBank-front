@@ -73,7 +73,7 @@ const GoalSettings = () => {
                 </div>
                 <button 
                     onClick={handleSubmit}
-                    className="mt-32 mb-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-8 rounded">送信</button>
+                    className="mt-16 mb-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-8 rounded">送信</button>
                 {message && (<p className="mt-4 text-xl font-semibold text-green-600">{message}</p>)}
             </div>
         </div>
