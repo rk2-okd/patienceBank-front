@@ -1,0 +1,14 @@
+<<<<<<< HEAD
+node_modules
+.next
+.env. local
+=======
+.git
+*.log
+vendor
+node_modules
+*.png
+*.jpg
+.DS_Store
+.env
+>>>>>>> origin/master

@@ -1,0 +1,41 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+
+  --bg-image: url("/background.png");
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+
+    /* ダークモード用の背景画像も変えたいならここに書く */
+    /* --bg-image: url("/background-dark.jpg"); */
+  }
+}
+
+body {
+  background-color: var(--background);
+
+  background-image: 
+    /* 白い半透明レイヤーを上に乗せる → 明るくなる */
+    linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)),
+    var(--bg-image);
+
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
