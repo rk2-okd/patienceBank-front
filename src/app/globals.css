@@ -5,6 +5,9 @@
   --foreground: #171717;
 
   --bg-image: url("/background.png");
+  --primary: #28AB91;
+  --text_green: #28AB91;
+  --main-bg: #1F2937;
 }
 
 @theme inline {
@@ -12,6 +15,10 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+    /* ここを追加 👇 */
+  --color-primary: var(--primary);
+  --color-text_green: var(--text_green);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -39,3 +46,8 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+@import "tailwindcss";
+
+
+/* 既存の :root とかはそのままでOKなら残してよい */
