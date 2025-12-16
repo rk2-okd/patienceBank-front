@@ -66,7 +66,7 @@ const CalendarPage = () => {
                   records.map((r, i) => (
                     <div key={i}>
                       <p>我慢内容：{r.gaman_thing}</p>
-                      <p className='text-right'>金額：{r.gaman_money}円</p>
+                      <p className='text-right '>金額：{r.gaman_money}円</p>
                     </div>
                   ))
                 ) : (
