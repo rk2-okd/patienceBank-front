@@ -5,7 +5,32 @@ const Login = () => {
     const [mailAddress, setMailAddress] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
-    const handleSubmit = async () => {}
+    const handleSubmit = async () => {
+        setMessage("");
+        try {
+            const res = await fetch("http://localhost:8080/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify({
+                email: mailAddress,
+                password: password,
+            }),
+            });
+
+            const data = await res.json().catch(() => ({}));
+
+            if (!res.ok) {
+            setMessage(data?.message ?? "ログイン失敗");
+            return;
+            }
+
+            setMessage("ログイン成功");
+            // ここで router.push("/") とかは好きに
+        } catch (e) {
+            setMessage("通信エラー");
+        }
+    };
     return (
         <div className="w-screen justify-center items-center my-12 text-center">
             <div className="text-center mx-100 pt-14 border-4 border-primary rounded-3xl">
@@ -34,6 +59,9 @@ const Login = () => {
                     className="mt-16 mb-4 bg-primary hover:bg-primary text-white font-bold py-2 px-8 rounded"
                     type="button" onClick={handleSubmit}>ログイン
                 </button>
+                {message && (
+                    <p className="mt-4 text-red-500 font-bold">{message}</p>
+                )}
             </div>
             <Link href="/signup" className='font-bold text-yellow-500 text-2xl'>新規登録はこちら</Link>
         </div>
