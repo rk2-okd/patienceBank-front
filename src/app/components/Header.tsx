@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import clsx from "clsx";
 
 type GoalResponse = {
   goal_money: number;
@@ -48,10 +47,7 @@ const Header = () => {
 
   return (
     <header className="relative w-full overflow-visible">
-      <div className={clsx("relative mx-auto flex max-w-[80%] border-primary items-center justify-between border-b-[4px] h-4/5",
-        "",
-        "max-w-[80%]"
-      )}>
+      <div className="relative mx-auto flex max-w-[80%] border-primary items-center justify-between border-b-[4px] h-4/5">
         <div className="flex items-center gap-8">
           <div className="relative h-[170px] w-[170px]">
             <Image
