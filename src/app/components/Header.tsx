@@ -5,13 +5,11 @@ import Image from "next/image";
 import Link from "next/link";
 
 type GoalResponse = {
-  goal_money: number;
-  goal_count: number;
+  goal: string;
 };
 
 const Header = () => {
-  const [goalMoney, setGoalMoney] = useState<number>(0);
-  const [goalCount, setGoalCount] = useState<number>(0);
+  const [goal, setGoal] = useState("");
     const [isLoggedIn, setIsLoggedIn] = useState(false);
   useEffect(() => {
     const checkLogin = async () => {
@@ -35,8 +33,8 @@ const Header = () => {
         if (!res.ok) throw new Error("目標取得失敗");
         const data: GoalResponse = await res.json();
 
-        setGoalMoney(data.goal_money);
-        setGoalCount(data.goal_count);
+        setGoal(data.goal);
+        // setGoalCount(data.goal_count);
       } catch (err) {
         console.error("getGoal error:", err);
       }
@@ -63,6 +61,7 @@ const Header = () => {
             <a href="/result" className="hover:underline text-text_green mt-4">先週の結果</a>
             <a href="/calendar" className="hover:underline text-text_green mt-4">カレンダー</a>
             <a href="/goalSettings" className="hover:underline text-text_green mt-4">目標設定変更</a>
+            <a href="/chart" className="hover:underline text-text_green mt-4">グラフ</a>
             {isLoggedIn ? (
               <Link href="/mypage" className="hover:underline text-text_green mt-4">マイページ</Link>
             ) : (
@@ -71,7 +70,7 @@ const Header = () => {
           </nav>
         </div>
       </div>
-      <div className="pointer-events-none absolute right-[280px] top-[110px]">
+      {/* <div className="pointer-events-none absolute right-[280px] top-[110px]">
         <div className="relative">
           <Image
             src="/bubble2.png"
@@ -86,7 +85,7 @@ const Header = () => {
             <p className="text-lg">{goalCount}回</p>
           </div>
         </div>
-      </div>
+      </div> */}
 
       <div className="pointer-events-none absolute right-[-20px] top-[-10px]">
         <div className="relative">
@@ -99,9 +98,9 @@ const Header = () => {
             priority
           />
           <div className="absolute inset-0 flex flex-col items-center justify-center text-emerald-900 font-bold text-base">
-            <p>目標時間</p>
+            <p>目標</p>
             <p className="text-xl">
-              {goalMoney.toLocaleString()}分
+              {goal}
             </p>
           </div>
         </div>
