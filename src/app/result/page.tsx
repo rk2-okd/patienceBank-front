@@ -29,7 +29,9 @@ const Result = () => {
   useEffect(() => {
     const fetchLastWeekData = async () => {
       try {
-        const res = await fetch("http://localhost:8080/lastweek");
+        const res = await fetch("http://localhost:8080/lastweek", {
+            credentials: "include",
+        });
         if (!res.ok) throw new Error("データ取得失敗");
         const data: LastWeekResponse = await res.json();
 
@@ -44,7 +46,9 @@ const Result = () => {
 
     const fetchGoal = async () => {
       try {
-        const res = await fetch("http://localhost:8080/getGoal");
+        const res = await fetch("http://localhost:8080/getGoal", {
+            credentials: "include",
+        });
         if (!res.ok) throw new Error("目標取得失敗");
         const data: GoalResponse = await res.json();
 

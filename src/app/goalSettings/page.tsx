@@ -10,8 +10,9 @@ const GoalSettings = () => {
       const response = await fetch("http://localhost:8080/goalsettings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include", 
         body: JSON.stringify({
-          goal: goal, // string がそのまま送られる
+          goal: goal,
         }),
       });
 

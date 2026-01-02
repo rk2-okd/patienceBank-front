@@ -9,7 +9,6 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      # ★ここをWSLパスに変える（自分の実パスに合わせて）
       - /mnt/c/GitHub/patience-bank/patienceBank-front:/app:rw
       - /app/node_modules
     networks:

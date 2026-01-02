@@ -7,7 +7,7 @@ import 'react-day-picker/dist/style.css';
 
 const CalendarPage = () => {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-  const [records, setRecords] = useState<{ gaman_thing: string; gaman_money: number }[]>([]);
+  const [records, setRecords] = useState<{ trained_part: string; gaman_money: number }[]>([]);
   const [totalAmount, setTotalAmount] = useState(0);
   ;
   useEffect(() => {
@@ -16,7 +16,9 @@ const CalendarPage = () => {
     const fetchHistory = async () => {
       const formattedDate = format(selectedDate, 'yyyy-MM-dd');
       try {
-        const res = await fetch(`http://localhost:8080/history?days=${formattedDate}`);
+        const res = await fetch(`http://localhost:8080/history?days=${formattedDate}`, {
+          credentials: "include",
+        });
         if (!res.ok) throw new Error('データ取得失敗');
         const data = await res.json();
         setRecords(data);
@@ -65,7 +67,7 @@ const CalendarPage = () => {
                 {records.length > 0 ? (
                   records.map((r, i) => (
                     <div key={i}>
-                      <p>筋トレ内容：{r.gaman_thing}</p>
+                      <p>筋トレ内容：{r.trained_part}</p>
                     </div>
                   ))
                 ) : (

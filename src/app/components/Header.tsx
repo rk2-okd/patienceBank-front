@@ -16,30 +16,25 @@ const Header = () => {
       const res = await fetch("http://localhost:8080/me", {
         credentials: "include",
       });
-
       setIsLoggedIn(res.ok);
+      console.log("Login status:", setIsLoggedIn)
     };
-
     checkLogin();
-  }, []);
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    setIsLoggedIn(!!token);
   }, []);
   useEffect(() => {
     const fetchGoal = async () => {
       try {
-        const res = await fetch("http://localhost:8080/getGoal");
+        const res = await fetch("http://localhost:8080/getGoal", {
+          credentials: "include",
+        });
         if (!res.ok) throw new Error("目標取得失敗");
         const data: GoalResponse = await res.json();
-
         setGoal(data.goal);
         // setGoalCount(data.goal_count);
       } catch (err) {
         console.error("getGoal error:", err);
       }
     };
-
     fetchGoal();
   }, []);
 

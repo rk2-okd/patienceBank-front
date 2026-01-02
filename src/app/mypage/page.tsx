@@ -17,7 +17,9 @@ const Mypage = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await fetch("http://localhost:8080/getUser");
+                const res = await fetch("http://localhost:8080/getUser", {
+                    credentials: "include",
+                });
                 if (!res.ok) throw new Error("データ取得失敗");
                 const data: UserDataResponse = await res.json();
                 setId(data.id.toString());

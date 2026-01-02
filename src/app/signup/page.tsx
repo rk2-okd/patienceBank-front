@@ -18,13 +18,13 @@ const SignUp = () => {
 
       const res = await fetch("http://localhost:8080/signup", {
         method: "POST",
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           username: userName,
           email: mailAddress,
           password: password,
         }),
-        credentials: "include",
       });
       if (!res.ok) {
         setMessage("登録に失敗しました");
@@ -33,11 +33,11 @@ const SignUp = () => {
       const loginRes = await fetch("http://localhost:8080/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({
           email: mailAddress,
           password: password,
         }),
-        credentials: "include",
       });
       if (!loginRes.ok) {
         setMessage("登録はできたけどログインに失敗しました");
