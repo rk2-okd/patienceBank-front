@@ -1,36 +1,48 @@
 "use client";
-import { useState,useEffect } from 'react';
+import React from 'react';
 import Link from 'next/link';
+type LoginResponse = {
+  message?: string;
+};
 const Login = () => {
-    const [mailAddress, setMailAddress] = useState('');
-    const [password, setPassword] = useState('');
-    const [message, setMessage] = useState('');
-    const handleSubmit = async () => {
-        setMessage("");
-        try {
-            const res = await fetch("http://localhost:8080/login", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            credentials: "include",
-            body: JSON.stringify({
-                email: mailAddress,
-                password: password,
-            }),
-            });
-
-            const data = await res.json().catch(() => ({}));
-
-            if (!res.ok) {
-            setMessage(data?.message ?? "ログイン失敗");
-            return;
+    const [mailAddress, setMailAddress] = React.useState('');
+    const [password, setPassword] = React.useState('');
+    const [message, setMessage] = React.useState('');
+    const [isSubmitting, setIsSubmitting] = React.useState(false);
+    const handleSubmit = React.useCallback(
+        async (e?: React.FormEvent) => {
+            if (isSubmitting) return;
+            setMessage("");
+            if (!mailAddress || !password) {
+                setMessage("メールアドレスとパスワードを入力してください");
+                return;
             }
-
-            setMessage("ログイン成功");
-            // ここで router.push("/") とかは好きに
-        } catch (e) {
-            setMessage("通信エラー");
-        }
-    };
+            setIsSubmitting(true);
+            try {
+                const res = await fetch("http://localhost:8080/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify({
+                    email: mailAddress,
+                    password: password,
+                }),
+                });
+                const data: LoginResponse = await res.json().catch(() => ({}));
+                if (!res.ok) {
+                setMessage(data?.message ?? "ログイン失敗");
+                return;
+                }
+                setMessage("ログイン成功");
+                // ここで遷移したいなら router.push("/mypage") 等にする（あなたの方針次第）
+            } catch {
+                setMessage("通信エラー");
+            } finally {
+                setIsSubmitting(false);
+            }
+        },
+        [mailAddress, password, isSubmitting]
+    );
     return (
         <div className="w-screen justify-center items-center my-12 text-center">
             <div className="text-center mx-100 pt-14 border-4 border-primary rounded-3xl">

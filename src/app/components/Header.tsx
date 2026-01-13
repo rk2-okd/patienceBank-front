@@ -1,87 +1,72 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 
 type GoalResponse = {
   goal: string;
 };
-
-const Header = () => {
-  const [goal, setGoal] = useState("");
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-  useEffect(() => {
-    const checkLogin = async () => {
-      const res = await fetch("http://localhost:8080/me", {
-        credentials: "include",
-      });
-      setIsLoggedIn(res.ok);
-      console.log("Login status:", setIsLoggedIn)
-    };
-    checkLogin();
+type NavItem = {
+  href: string;
+  label: string;
+};
+const Header: React.FC = React.memo(function Header() {
+  const [goal, setGoal] = React.useState("");
+  const navItems = React.useMemo<NavItem[]>(
+    () => [
+      { href: "/input", label: "がまん入力" },
+      { href: "/goalSettings", label: "目標設定変更" },
+      { href: "/record", label: "記録" },
+      { href: "/mypage", label: "マイページ" },
+    ],
+    []
+  );
+  const fetchGoal = React.useCallback(async (signal: AbortSignal) => {
+    const res = await fetch("http://localhost:8080/getGoal", {
+      credentials: "include",
+      signal,
+    });
+    const data: GoalResponse = await res.json();
+    const nextGoal = data.goal ?? "";
+    setGoal((prev) => (prev === nextGoal ? prev : nextGoal));
   }, []);
-  useEffect(() => {
-    const fetchGoal = async () => {
-      try {
-        const res = await fetch("http://localhost:8080/getGoal", {
-          credentials: "include",
-        });
-        if (!res.ok) throw new Error("目標取得失敗");
-        const data: GoalResponse = await res.json();
-        setGoal(data.goal);
-        // setGoalCount(data.goal_count);
-      } catch (err) {
-        console.error("getGoal error:", err);
-      }
-    };
-    fetchGoal();
-  }, []);
-
+  React.useEffect(() => {
+    const controller = new AbortController();
+    fetchGoal(controller.signal).catch((e: any) => {
+      if (e?.name === "AbortError") return;
+      console.error("getGoal error:", e);
+    });
+    return () => controller.abort();
+  }, [fetchGoal]);
   return (
     <header className="relative w-full overflow-visible">
       <div className="relative mx-auto flex max-w-[80%] border-primary items-center justify-between border-b-[4px] h-4/5">
         <div className="flex items-center gap-8">
-          <div className="relative h-[170px] w-[170px]">
-            <Image
-              src="/からだlogo.png"
-              alt="がまんBank ロゴ"
-              fill
-              className="object-contain"
-              priority
-            />
-          </div>
+          <Link href="/" className="block">
+            <div className="relative h-[170px] w-[170px]">
+              <Image
+                src="/からだlogo.png"
+                alt="がまんBank ロゴ"
+                fill
+                className="object-contain"
+                priority
+              />
+            </div>
+          </Link>
           <nav className="flex flex-wrap gap-8 text-lg font-medium">
-            <a href="/input" className="hover:underline text-text_green mt-4">がまん入力</a>
-            <a href="/result" className="hover:underline text-text_green mt-4">先週の結果</a>
-            <a href="/calendar" className="hover:underline text-text_green mt-4">カレンダー</a>
-            <a href="/goalSettings" className="hover:underline text-text_green mt-4">目標設定変更</a>
-            <a href="/chart" className="hover:underline text-text_green mt-4">グラフ</a>
-            {isLoggedIn ? (
-              <Link href="/mypage" className="hover:underline text-text_green mt-4">マイページ</Link>
-            ) : (
-              <Link href="/login" className="hover:underline text-text_green mt-4">ログイン</Link>
-            )}
+            {navItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="hover:underline text-text_green mt-4"
+              >
+                {item.label}
+              </Link>
+            ))}
           </nav>
         </div>
       </div>
-      {/* <div className="pointer-events-none absolute right-[280px] top-[110px]">
-        <div className="relative">
-          <Image
-            src="/bubble2.png"
-            alt="バブル"
-            width={220}
-            height={220}
-            className="opacity-70"
-            priority
-          />
-          <div className="absolute inset-0 flex flex-col items-center justify-center text-emerald-900 font-bold text-sm">
-            <p>目標回数</p>
-            <p className="text-lg">{goalCount}回</p>
-          </div>
-        </div>
-      </div> */}
-
       <div className="pointer-events-none absolute right-[-20px] top-[-10px]">
         <div className="relative">
           <Image
@@ -94,14 +79,12 @@ const Header = () => {
           />
           <div className="absolute inset-0 flex flex-col items-center justify-center text-emerald-900 font-bold text-base">
             <p>目標</p>
-            <p className="text-xl">
-              {goal}
-            </p>
+            <p className="text-xl">{goal}</p>
           </div>
         </div>
       </div>
     </header>
   );
-};
+});
 
 export default Header;

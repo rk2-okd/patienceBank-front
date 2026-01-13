@@ -7,6 +7,11 @@
   --bg-image: url("/background.png");
   --primary: #28AB91;
   --text_green: #28AB91;
+  --text-gray: #C9D1CC;
+  --text-accent: #7FAF9B;
+  --text-white: #E6ECE8;
+  --button-text: #E6ECE8;
+  --button-bg: #1F4D3E;
   --main-bg: #1F2937;
 }
 
@@ -19,12 +24,18 @@
     /* ここを追加 👇 */
   --color-primary: var(--primary);
   --color-text_green: var(--text_green);
+  --color-text-gray: var(--text-gray);
+  --color-text-accent: var(--text-accent);
+  --color-text-white: var(--text-white);
+  --color-button-text: var(--button-text);
+  --color-button-bg: var(--button-bg);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+
 
     /* ダークモード用の背景画像も変えたいならここに書く */
     /* --bg-image: url("/background-dark.jpg"); */
@@ -34,17 +45,13 @@
 body {
   background-color: var(--background);
 
-  background-image: 
-    /* 白い半透明レイヤーを上に乗せる → 明るくなる */
-    linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)),
-    var(--bg-image);
-
+  background-image: var(--bg-image);
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
 
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Arial, Helvetica, 'Inter',  'Noto Sans JP', sans-serif;
 }
 
 @import "tailwindcss";

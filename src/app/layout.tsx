@@ -2,16 +2,15 @@
 
 import "./globals.css";
 import Header from "./components/Header";
+import { usePathname } from "next/navigation";
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode}>) {
+  const pathname = usePathname();
+  const isTopPage = pathname === "/";
   return (
     <html lang="ja">
       <body className="min-h-screen flex flex-col">
-        <Header />
+        {!isTopPage && <Header />}
         <main>{children}</main>
       </body>
     </html>
