@@ -13,13 +13,17 @@
   --button-text: #E6ECE8;
   --button-bg: #1F4D3E;
   --main-bg: #1F2937;
+
+  --font-logo: 'Inter';
+  --font-text: 'Noto Sans JP', sans-serif;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-text);
   --font-mono: var(--font-geist-mono);
+
 
     /* ここを追加 👇 */
   --color-primary: var(--primary);
@@ -51,7 +55,7 @@ body {
   background-position: center;
 
   color: var(--foreground);
-  font-family: Arial, Helvetica, 'Inter',  'Noto Sans JP', sans-serif;
+  font-family:  var(--font-text);
 }
 
 @import "tailwindcss";

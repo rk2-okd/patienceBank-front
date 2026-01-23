@@ -16,29 +16,29 @@ const Header: React.FC = React.memo(function Header() {
   const navItems = React.useMemo<NavItem[]>(
     () => [
       { href: "/input", label: "がまん入力" },
-      { href: "/goalSettings", label: "目標設定変更" },
       { href: "/record", label: "記録" },
       { href: "/mypage", label: "マイページ" },
+      { href: "/rewardSettings", label: "褒美設定変更" },
     ],
     []
   );
-  const fetchGoal = React.useCallback(async (signal: AbortSignal) => {
-    const res = await fetch("http://localhost:8080/getGoal", {
-      credentials: "include",
-      signal,
-    });
-    const data: GoalResponse = await res.json();
-    const nextGoal = data.goal ?? "";
-    setGoal((prev) => (prev === nextGoal ? prev : nextGoal));
-  }, []);
-  React.useEffect(() => {
-    const controller = new AbortController();
-    fetchGoal(controller.signal).catch((e: any) => {
-      if (e?.name === "AbortError") return;
-      console.error("getGoal error:", e);
-    });
-    return () => controller.abort();
-  }, [fetchGoal]);
+  // const fetchGoal = React.useCallback(async (signal: AbortSignal) => {
+  //   const res = await fetch("http://localhost:8080/getGoal", {
+  //     credentials: "include",
+  //     signal,
+  //   });
+  //   const data: GoalResponse = await res.json();
+  //   const nextGoal = data.goal ?? "";
+  //   setGoal((prev) => (prev === nextGoal ? prev : nextGoal));
+  // }, []);
+  // React.useEffect(() => {
+  //   const controller = new AbortController();
+  //   fetchGoal(controller.signal).catch((e: any) => {
+  //     if (e?.name === "AbortError") return;
+  //     console.error("getGoal error:", e);
+  //   });
+  //   return () => controller.abort();
+  // }, [fetchGoal]);
   return (
     <header className="relative w-full overflow-visible">
       <div className="relative mx-auto flex max-w-[80%] border-primary items-center justify-between border-b-[4px] h-4/5">
@@ -65,22 +65,6 @@ const Header: React.FC = React.memo(function Header() {
               </Link>
             ))}
           </nav>
-        </div>
-      </div>
-      <div className="pointer-events-none absolute right-[-20px] top-[-10px]">
-        <div className="relative">
-          <Image
-            src="/bubble2.png"
-            alt="バブル"
-            width={260}
-            height={260}
-            className="opacity-65"
-            priority
-          />
-          <div className="absolute inset-0 flex flex-col items-center justify-center text-emerald-900 font-bold text-base">
-            <p>目標</p>
-            <p className="text-xl">{goal}</p>
-          </div>
         </div>
       </div>
     </header>

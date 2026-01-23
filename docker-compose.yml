@@ -9,7 +9,7 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - /mnt/c/GitHub/patience-bank/patienceBank-front:/app:rw
+      - .:/app:rw
       - /app/node_modules
     networks:
       - patienceBank-networks

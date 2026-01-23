@@ -4,12 +4,14 @@ import { useState,useEffect, useMemo } from 'react';
 import { DayPicker } from 'react-day-picker';
 import { format } from 'date-fns';
 import Link from 'next/link';
+import { useRouter } from "next/navigation";
 import 'react-day-picker/dist/style.css';
 type NavItem = {
   href: string;
   label: string;
 };
 const CalendarPage = () => {
+  const router = useRouter();
   const navItems = useMemo<NavItem[]>(
     () => [
       { href: "/calendar", label: "カレンダー" },
@@ -32,6 +34,10 @@ const CalendarPage = () => {
         const res = await fetch(`http://localhost:8080/history?days=${formattedDate}`, {
           credentials: "include",
         });
+        if (res.status === 401) {
+            router.push("/login");
+            return;
+        }
         console.log("response:", res);
         if (!res.ok) throw new Error('データ取得失敗');
         const data = await res.json();
@@ -54,7 +60,7 @@ const CalendarPage = () => {
     );
   }
   return (
-    <div className="flex w-screen flex-col justify-center items-center">
+    <div className="max-w-[80%] mx-auto">
       <nav className="flex flex-wrap gap-8 text-lg font-medium">
         {navItems.map((item) => (
           <Link
@@ -66,8 +72,7 @@ const CalendarPage = () => {
           </Link>
         ))}
       </nav>
-      <div className="text-center mx-auto w-3/4 mt-8">
-        <h2 className="text-4xl font-bold mb-8 mr-8">カレンダー</h2>
+      <div className="mt-8 flex flex-col justify-center items-center">
         <div className="flex justify-center space-x-8 mr-12">
           <div className="w-1xl px-12 py-8 border-2 border-black rounded-3xl bg-white">
           <DayPicker
@@ -94,7 +99,7 @@ const CalendarPage = () => {
               <div className='space-y-6 mt-10 px-4'>
                 {records.length > 0 ? (
                   records.map((r, i) => (
-                    <div key={i} className='flex'>
+                    <div key={i}>
                       <p>筋トレ部位：{r.trained_part}</p>
                       <p>時間：{r.workout_duration}分</p>
                     </div>

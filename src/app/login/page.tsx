@@ -34,6 +34,7 @@ const Login = () => {
                 return;
                 }
                 setMessage("ログイン成功");
+                window.location.href = "/input";
                 // ここで遷移したいなら router.push("/mypage") 等にする（あなたの方針次第）
             } catch {
                 setMessage("通信エラー");
@@ -43,8 +44,38 @@ const Login = () => {
         },
         [mailAddress, password, isSubmitting]
     );
+    const guestSubmit = React.useCallback(
+        async (e?: React.FormEvent) => {
+            if (isSubmitting) return;
+            setMessage("");
+            setIsSubmitting(true);
+            try {
+                const res = await fetch("http://localhost:8080/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify({
+                    email: "guest@example.com",
+                    password: "guest_password",
+                }),
+                });
+                const data: LoginResponse = await res.json().catch(() => ({}));
+                if (!res.ok) {
+                setMessage(data?.message ?? "ログイン失敗");
+                return;
+                }
+                setMessage("ログイン成功");
+                window.location.href = "/input";
+            } catch {
+                setMessage("通信エラー");
+            } finally {
+                setIsSubmitting(false);
+            }
+        },
+        [mailAddress, password, isSubmitting]
+    );
     return (
-        <div className="w-screen justify-center items-center my-12 text-center">
+        <div className="w-screen min-h-screen justify-center items-center my-32 text-center">
             <div className="text-center mx-100 pt-14 border-4 border-primary rounded-3xl">
                 <h2 className="text-4xl font-bold mb-24 text-text_green">ログイン</h2>
                 <div className="space-y-6">
@@ -75,6 +106,10 @@ const Login = () => {
                     <p className="mt-4 text-red-500 font-bold">{message}</p>
                 )}
             </div>
+            <button
+                className="mt-10 bg-secondary hover:bg-secondary text-white font-bold py-2 px-8 rounded"
+                type="button" onClick={guestSubmit}>ゲストログイン
+            </button>
             <Link href="/signup" className='font-bold text-yellow-500 text-2xl'>新規登録はこちら</Link>
         </div>
     );

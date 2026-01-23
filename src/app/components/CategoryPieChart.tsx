@@ -61,7 +61,7 @@ export default function CategoryPieChart({
   };
 
   return (
-    <div style={{ width: 720, height: 500 }}>
+    <div style={{ width: 440, height: 400 }}>
       <Pie
         data={data}
         options={{
@@ -72,6 +72,7 @@ export default function CategoryPieChart({
               display: true,
               position: "bottom",
               labels: {
+                color: "#E6ECE8",
                 boxWidth: 14,
                 boxHeight: 14,
                 padding: 14,

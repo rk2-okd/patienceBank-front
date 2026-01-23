@@ -1,11 +1,13 @@
 "use client";
 import Body, { PART_LABELS_JA, type PartName } from "../components/Body";
-import { useCallback, useMemo, useState } from "react";
-
+import { useCallback, useMemo, useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 const Input = () => {
   const [patienceThing, setPatienceThing] = useState("");
   const [patienceTime, setPatienceTime] = useState("");
   const [message, setMessage] = useState("");
+  const [userid, setUserid] = useState("");
+  const router = useRouter();
   const [selectedPart, setSelectedPart] = useState<PartName | null>(null);
   const timeOptions =  useMemo(() => 
     [5,10,15,20,25,30,35,40,45,50,55,60],
@@ -16,8 +18,17 @@ const Input = () => {
     setPatienceThing(PART_LABELS_JA[name]);
     setMessage("");
   }, []);
+  useEffect(() => {
+    (async () => {
+      const res = await fetch("http://localhost:8080/me", {
+        credentials: "include",
+      });
+      if (res.status === 401) router.push("/login");
+      const { id }: { id: number } = await res.json();
+      setUserid(id.toString());
+    })();
+  }, []);
   const handleSubmit = useCallback(async () => {
-    // バリデーション：今のコードだと「鍛えた場所」チェックが patienceThing で意味的にOKだけど文言がズレてたので整理
     if (!selectedPart) {
       setMessage("鍛えた場所が選択されていません");
       return;

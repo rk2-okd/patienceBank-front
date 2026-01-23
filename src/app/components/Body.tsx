@@ -58,7 +58,17 @@ type BoundsNumbers = {
   centerZ: number;
 };
 
-function Human({
+const TARGET_SET: ReadonlySet<string> = new Set(TARGET_PARTS);
+
+const SELECTED_COLOR = new THREE.Color("#3b82f6");
+const DEFAULT_COLOR = new THREE.Color("#ffffff");
+
+/**
+ * Human（軽量化）
+ * - traverseは初回だけ
+ * - 選択色の更新は「前回」「今回」だけ
+ */
+const Human = React.memo(function Human({
   onSelect,
   selectedPart,
   onBounds,
@@ -67,23 +77,26 @@ function Human({
   selectedPart?: PartName | null;
   onBounds?: (b: BoundsNumbers) => void;
 }) {
-  const gltf = useGLTF("/models/human.glb");
+  const { scene } = useGLTF("/models/human.glb");
 
-  const meshes = React.useMemo(() => {
-    const scene = gltf.scene;
-
+  // 1) sceneの初期設定（scale/position）は一度だけ
+  React.useLayoutEffect(() => {
     scene.scale.set(0.1, 0.1, 0.1);
     scene.position.set(0, 0, 0);
+  }, [scene]);
 
-    const list: THREE.Mesh[] = [];
+  // 2) name -> mesh の辞書を一度だけ作る（毎レンダーで配列作らない）
+  const meshMap = React.useMemo(() => {
+    const map = new Map<string, THREE.Mesh>();
     scene.traverse((obj: any) => {
-      if (obj?.isMesh) list.push(obj);
+      if (obj?.isMesh) map.set(obj.name, obj as THREE.Mesh);
     });
-    return list;
-  }, [gltf.scene]);
+    return map;
+  }, [scene]);
 
+  // 3) bounds計算（sceneが変わった時だけ）
   React.useLayoutEffect(() => {
-    const box = new THREE.Box3().setFromObject(gltf.scene);
+    const box = new THREE.Box3().setFromObject(scene);
     const size = box.getSize(new THREE.Vector3());
     const center = box.getCenter(new THREE.Vector3());
 
@@ -93,40 +106,55 @@ function Human({
       centerY: center.y,
       centerZ: center.z,
     });
-  }, [gltf.scene, onBounds]);
+  }, [scene, onBounds]);
+
+  // 4) 選択状態の色更新：全メッシュ更新をやめる
+  const prevSelectedRef = React.useRef<PartName | null>(null);
 
   React.useEffect(() => {
-    meshes.forEach((mesh) => {
-      const material = mesh.material as THREE.MeshStandardMaterial | undefined;
-      if (!material) return;
-      material.color.set(mesh.name === selectedPart ? "#3b82f6" : "#ffffff");
-    });
-  }, [selectedPart, meshes]);
+    const prev = prevSelectedRef.current;
+    const next = selectedPart ?? null;
+
+    // 前回選択を戻す
+    if (prev) {
+      const prevMesh = meshMap.get(prev);
+      const mat = prevMesh?.material as THREE.MeshStandardMaterial | undefined;
+      if (mat) mat.color.copy(DEFAULT_COLOR);
+    }
+
+    // 今回選択を青に
+    if (next) {
+      const nextMesh = meshMap.get(next);
+      const mat = nextMesh?.material as THREE.MeshStandardMaterial | undefined;
+      if (mat) mat.color.copy(SELECTED_COLOR);
+    }
+
+    prevSelectedRef.current = next;
+  }, [selectedPart, meshMap]);
 
   const handlePointerDown = React.useCallback(
     (e: any) => {
       e.stopPropagation();
-      const name = e.object?.name as PartName | undefined;
-      if (name && TARGET_PARTS.includes(name)) onSelect?.(name);
+      const name = e.object?.name as string | undefined;
+      if (!name) return;
+      if (TARGET_SET.has(name)) onSelect?.(name as PartName);
     },
     [onSelect]
   );
 
-  return <primitive object={gltf.scene} onPointerDown={handlePointerDown} />;
-}
+  return <primitive object={scene} onPointerDown={handlePointerDown} />;
+});
 
 useGLTF.preload("/models/human.glb");
 
 /**
  * ✅ 足が切れないように「安全マージン」を入れた縦フィット
- * - fill を 0.90〜0.95 あたりにして “必ず上下入る” を優先
- * - targetY は centerY（上下均等）にして足が欠けにくくする
  */
 function FitCameraSafe({
   bounds,
   controlsRef,
   fov,
-  fill = 0.92, // ✅ ここが肝：小さくするほど引いて上下が入る
+  fill = 0.92,
 }: {
   bounds: BoundsNumbers | null;
   controlsRef: React.RefObject<any>;
@@ -139,7 +167,7 @@ function FitCameraSafe({
     if (!bounds) return;
 
     const cam = camera as THREE.PerspectiveCamera;
-    if (!("isPerspectiveCamera" in cam) || !cam.isPerspectiveCamera) return;
+    if (!cam.isPerspectiveCamera) return;
 
     const { sizeY, centerX, centerY, centerZ } = bounds;
 
@@ -150,7 +178,6 @@ function FitCameraSafe({
     cam.near = Math.max(0.01, dist / 200);
     cam.far = dist * 200;
 
-    // ✅ 上下均等に入れる（centerYを見る）
     cam.position.set(centerX, centerY, centerZ + dist);
     cam.lookAt(centerX, centerY, centerZ);
     cam.updateProjectionMatrix();
@@ -171,8 +198,6 @@ type BodyProps = {
   heightVh?: number;
   maxWidthPx?: number;
   fov?: number;
-
-  /** 詰め具合（0.90〜0.95推奨） */
   fill?: number;
 };
 
@@ -188,8 +213,14 @@ const Body: React.FC<BodyProps> = ({
   const [bounds, setBounds] = React.useState<BoundsNumbers | null>(null);
 
   return (
-    <div className="w-full mx-auto" style={{ height: `${heightVh}vh`, maxWidth: `${maxWidthPx}px` }}>
-      <Canvas camera={{ fov, near: 0.01, far: 5000, position: [0, 0, 5] }} style={{ width: "100%", height: "100%" }}>
+    <div
+      className="w-full mx-auto"
+      style={{ height: `${heightVh}vh`, maxWidth: `${maxWidthPx}px` }}
+    >
+      <Canvas
+        camera={{ fov, near: 0.01, far: 5000, position: [0, 0, 5] }}
+        style={{ width: "100%", height: "100%" }}
+      >
         <ambientLight intensity={0.8} />
         <directionalLight position={[3, 3, 3]} intensity={1.2} />
 
