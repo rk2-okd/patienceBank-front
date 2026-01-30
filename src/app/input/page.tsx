@@ -6,7 +6,6 @@ const Input = () => {
   const [patienceThing, setPatienceThing] = useState("");
   const [patienceTime, setPatienceTime] = useState("");
   const [message, setMessage] = useState("");
-  const [userid, setUserid] = useState("");
   const router = useRouter();
   const [selectedPart, setSelectedPart] = useState<PartName | null>(null);
   const timeOptions =  useMemo(() => 
@@ -24,8 +23,6 @@ const Input = () => {
         credentials: "include",
       });
       if (res.status === 401) router.push("/login");
-      const { id }: { id: number } = await res.json();
-      setUserid(id.toString());
     })();
   }, []);
   const handleSubmit = useCallback(async () => {
@@ -69,11 +66,8 @@ const Input = () => {
     []
   );
   return (
-    <div className="w-screen justify-center items-center my-12">
-      <div className="text-center mx-100 pt-6 border-4 border-primary rounded-3xl">
-        <h2 className="text-4xl font-bold mb-8 text-text_green">
-          なにを我慢しましたか？
-        </h2>
+    <div className="w-screen justify-center items-center [background-image:var(--bg-gradient)]">
+      <div className="text-center mx-100 pt-6 ">
         <div className="flex flex-row items-center">
           <div className="basis-[45%] my-3">
             <Body
@@ -99,7 +93,7 @@ const Input = () => {
                 <select
                   value={patienceTime}
                   onChange={(e) => setPatienceTime(e.target.value)}
-                  className="border rounded px-2 py-1"
+                  className="border rounded px-2 py-1 bg-gray-100"
                 >
                   <option value="">選択してください</option>
                   {timeOptions.map(item => (

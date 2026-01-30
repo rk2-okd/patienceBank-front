@@ -5,6 +5,11 @@
   --foreground: #171717;
 
   --bg-image: url("/background.png");
+  --bg-gradient: linear-gradient(
+    to bottom,
+    rgba(23, 21, 21, 0.75),
+    rgba(23, 21, 21, 0.4) 
+  );
   --primary: #28AB91;
   --text_green: #28AB91;
   --text-gray: #C9D1CC;
@@ -39,10 +44,11 @@
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
-
-
-    /* ダークモード用の背景画像も変えたいならここに書く */
-    /* --bg-image: url("/background-dark.jpg"); */
+    --bg-gradient: linear-gradient(
+      to bottom,
+      rgba(23, 21, 21, 0.6),
+      rgba(23, 21, 21, 0.4) 
+    );
   }
 }
 
