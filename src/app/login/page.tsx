@@ -78,23 +78,21 @@ const Login = () => {
         <div className="w-screen min-h-screen justify-center items-center my-32 text-center">
             <div className="text-center mx-100 pt-14 border-4 border-primary rounded-3xl">
                 <h2 className="text-4xl font-bold mb-24 text-text_green">ログイン</h2>
-                <div className="space-y-6">
-                    <div className="flex items-center justify-center space-x-4">
-                        <h4 className="text-lg text-text_green font-bold">メールアドレス：</h4> 
+                <div className="flex justify-center">
+                    <div className="grid grid-cols-[160px_1fr] gap-y-8 justify-items-start">
+                        <p className="text-lg text-text_green font-bold">メールアドレス：</p> 
                         <input
                             type="text"
                             value={mailAddress}
                             onChange={(e) => setMailAddress(e.target.value)}
-                            className="text-base border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="text-base border border-gray-300 rounded px-2 py-1 bg-white"
                             placeholder="a@a.com"/>
-                    </div>
-                    <div className='flex items-center justify-center'>
-                        <h4 className="text-lg mr-6 text-text_green font-bold">パスワード：</h4>
+                        <p className="text-lg mr-6 text-text_green font-bold">パスワード：</p>
                         <input 
                             type="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}   
-                            className="text-base border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="text-base border border-gray-300 rounded px-2 py-1  bg-white"
                             placeholder="password"/>
                     </div>
                 </div>

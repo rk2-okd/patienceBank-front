@@ -40,10 +40,14 @@ const Mypage = () => {
         async (e?: React.FormEvent) => {
             e?.preventDefault();
             try {
-                const res = await fetch("http://localhost:8080/goalsettings", {
+                console.log("sending goal:", JSON.stringify(goal));
+                const res = await fetch("http://localhost:8080/goalsetting", {
                     method: "PATCH",
                     headers: { "Content-Type": "application/json" },
                     credentials: "include",
+                    body: JSON.stringify({
+                        goal: goal,
+                    }),
                 });
                 setMessage("目標変更完了しました。")
                 if (!res.ok) {
@@ -53,7 +57,7 @@ const Mypage = () => {
                 console.error(err);
                 alert("目標変更に失敗しました");
             }
-        }, []
+        }, [goal]
     );
     useEffect(() => {
         const fetchData = async () => {
@@ -85,7 +89,7 @@ const Mypage = () => {
                 <div className="space-y-6">
                     <h4 className="text-lg text-text_green font-bold mb-8">{message}</h4>
                     <div className="ml-52 space-y-4 text-left">
-                        <div className="grid grid-cols-[160px_1fr] gap-y-4 justify-items-start">
+                        <div className="grid grid-cols-[160px_1fr] gap-y-4 justify-items-start mr-10">
                             <p className="text-text_green">ユーザー名:</p>
                             <p className="text-text_green">{username}</p>
                             <p className="text-text_green">メールアドレス:</p>

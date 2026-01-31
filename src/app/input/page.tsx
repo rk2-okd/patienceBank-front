@@ -3,8 +3,8 @@ import Body, { PART_LABELS_JA, type PartName } from "../components/Body";
 import { useCallback, useMemo, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 const Input = () => {
-  const [patienceThing, setPatienceThing] = useState("");
-  const [patienceTime, setPatienceTime] = useState("");
+  const [WithinThing, setWithinThing] = useState("");
+  const [WithinTime, setWithinTime] = useState("");
   const [message, setMessage] = useState("");
   const router = useRouter();
   const [selectedPart, setSelectedPart] = useState<PartName | null>(null);
@@ -14,7 +14,7 @@ const Input = () => {
   );
   const handleSelectPart = useCallback((name: PartName) => {
     setSelectedPart(name);
-    setPatienceThing(PART_LABELS_JA[name]);
+    setWithinThing(PART_LABELS_JA[name]);
     setMessage("");
   }, []);
   useEffect(() => {
@@ -30,11 +30,11 @@ const Input = () => {
       setMessage("鍛えた場所が選択されていません");
       return;
     }
-    if (!patienceTime) {
+    if (!WithinTime) {
       setMessage("時間を選択してください");
       return;
     }
-    const timeNum = Number(patienceTime);
+    const timeNum = Number(WithinTime);
     if (!Number.isFinite(timeNum) || timeNum <= 0) {
       setMessage("時間が不正です");
       return;
@@ -51,17 +51,17 @@ const Input = () => {
       });
       if (!response.ok) throw new Error("送信に失敗しました");
       setMessage("送信が成功しました");
-      setPatienceTime("");
-      setPatienceThing("");
+      setWithinTime("");
+      setWithinThing("");
       setSelectedPart(null);
     } catch (error) {
       setMessage("送信中にエラーが発生しました");
       console.error("エラー:", error);
     }
-  }, [patienceTime, selectedPart]);
+  }, [WithinTime, selectedPart]);
   const handleTimeChange = useCallback(
     (e: React.ChangeEvent<HTMLSelectElement>) => {
-      setPatienceTime(e.target.value);
+      setWithinTime(e.target.value);
     },
     []
   );
@@ -82,7 +82,7 @@ const Input = () => {
                 <h4 className="text-lg text-text_green">鍛えた場所：</h4>
                 <input
                   type="text"
-                  value={patienceThing}
+                  value={WithinThing}
                   readOnly
                   className="text-base border border-gray-300 rounded px-2 py-1 bg-gray-100 cursor-not-allowed"
                   placeholder="モデルをタップして選択"
@@ -91,8 +91,8 @@ const Input = () => {
               <div className="flex space-x-4 items-center">
                 <h4 className="text-lg text-text_green ml-13">時間：</h4>
                 <select
-                  value={patienceTime}
-                  onChange={(e) => setPatienceTime(e.target.value)}
+                  value={WithinTime}
+                  onChange={(e) => setWithinTime(e.target.value)}
                   className="border rounded px-2 py-1 bg-gray-100"
                 >
                   <option value="">選択してください</option>

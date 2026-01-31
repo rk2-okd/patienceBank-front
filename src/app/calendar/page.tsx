@@ -68,7 +68,7 @@ const CalendarPage = () => {
   };
   return (
     <div className="[background-image:var(--bg-gradient)]">
-      <nav className="flex flex-wrap gap-8 text-lg font-medium max-w-[80%] mx-auto">
+      <nav className="my-2 flex flex-wrap gap-8 text-lg font-medium max-w-[80%] mx-auto">
         {navItems.map((item) => (
           <Link
             key={item.href}
@@ -79,7 +79,7 @@ const CalendarPage = () => {
           </Link>
         ))}
       </nav>
-      <div className="mt-8 flex flex-col justify-center items-center">
+      <div className="my-8 flex flex-col justify-center items-center">
         <div className="flex justify-center space-x-8 mr-12">
           <div className="w-1xl px-12 py-2 border-2 border-black rounded-3xl bg-white">
             <DayPicker

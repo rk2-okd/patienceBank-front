@@ -68,7 +68,7 @@ const Header: React.FC = React.memo(function Header() {
               className="h-[70px] w-[670px] mt-5"
             />
             <div className="absolute inset-0 flex items-center justify-center">
-              <span className="text-xl font-bold text-black mr-16">
+              <span className="text-xl font-bold text-text_green mr-16">
                 {goal}
               </span>
             </div>

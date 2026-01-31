@@ -79,7 +79,7 @@ const Record = () => {
   };
   return (
     <main style={{ padding: 16 }} className="mx-auto py-8">
-      <nav className="flex flex-wrap gap-8 text-lg font-medium mr-80">
+      <nav className="flex flex-wrap gap-8 text-lg font-medium max-w-[80%] ">
         {navItems.map((item) => (
           <Link
             key={item.href}
