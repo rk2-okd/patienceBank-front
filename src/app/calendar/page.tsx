@@ -67,8 +67,8 @@ const CalendarPage = () => {
     router.push(`/record?year=${year}&month=${month}`);
   };
   return (
-    <div className="[background-image:var(--bg-gradient)]">
-      <nav className="my-2 flex flex-wrap gap-8 text-lg font-medium max-w-[80%] mx-auto">
+    <div className="[background-image:var(--bg-gradient)] justify-center py-8">
+      <nav className="flex flex-wrap gap-8 text-lg font-medium max-w-[80%] mx-auto">
         {navItems.map((item) => (
           <Link
             key={item.href}
@@ -81,7 +81,7 @@ const CalendarPage = () => {
       </nav>
       <div className="my-8 flex flex-col justify-center items-center">
         <div className="flex justify-center space-x-8 mr-12">
-          <div className="w-1xl px-12 py-2 border-2 border-black rounded-3xl bg-white">
+          <div className="w-1xl px-16 py-6 border-2 border-black rounded-3xl bg-white">
             <DayPicker
               mode="single"
               selected={selectedDate ?? undefined}
@@ -93,7 +93,7 @@ const CalendarPage = () => {
                 today: "border border-blue-500",
               }}
             />
-            <button type="button" onClick={handleGraphClick} className="text-text_green font-bold underline my-2">
+            <button type="button" onClick={handleGraphClick} className="text-text_green font-bold underline my-4 mt-6">
               グラフを見る
             </button>
           </div>
@@ -108,7 +108,7 @@ const CalendarPage = () => {
               <div className="space-y-6 mt-10 px-4">
                 {records.length > 0 ? (
                   records.map((r, i) => (
-                    <div key={i}>
+                    <div key={i} className="flex justify-between border-b pb-2">
                       <p>筋トレ部位：{r.trained_part}</p>
                       <p>時間：{r.workout_duration}分</p>
                     </div>

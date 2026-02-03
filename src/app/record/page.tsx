@@ -78,8 +78,8 @@ const Record = () => {
     return year === now.getFullYear() && month === now.getMonth() + 1;
   };
   return (
-    <main style={{ padding: 16 }} className="mx-auto py-8">
-      <nav className="flex flex-wrap gap-8 text-lg font-medium max-w-[80%] ">
+    <main style={{ padding: 16 }} className="mx-auto py-8 justify-center items-center">
+      <nav className="flex flex-wrap gap-8 text-lg font-medium max-w-[80%] mx-auto">
         {navItems.map((item) => (
           <Link
             key={item.href}
